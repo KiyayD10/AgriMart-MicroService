@@ -8,12 +8,13 @@ Marketplace pertanian berbasis arsitektur microservices.
 - REST API
 
 ## Struktur Project
+```
 agrimart-microservices/
-├── api/        → semua microservices & gateway
-├── cms/        → panel admin (nanti)
-├── user/       → aplikasi user (nanti)
-└── docs/       → dokumentasi (nanti)
-
+├── api/              - semua microservices & gateway
+├── cms/              - panel admin 
+├── user/             - aplikasi user 
+└── dokumentasi/      - dokumentasi 
+```
 ## Services (Roadmap)
 - [ ] kategori-service
 - [ ] product-service
