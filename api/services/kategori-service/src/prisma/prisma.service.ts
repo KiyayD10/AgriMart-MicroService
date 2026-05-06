@@ -13,7 +13,7 @@ export class PrismaService
     await this.$connect();
   }
 
-  // Putus koneksi DB pas module di-destroy, biar gak memory leak
+  // Putus koneksi DB pas module di-destroy biar gak memory leak
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
   }
