@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateKategoriDto } from './dto/create-kategori.dto';
 import { UpdateKategoriDto } from './dto/update-kategori.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Kategori } from '../generated/prisma/client';
 
 @Injectable()
 export class KategoriService {
-  create(createKategoriDto: CreateKategoriDto) {
-    return 'This action adds a new kategori';
+  // Buat koneksi ke Prisma
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Tambah kategori baru
+  async create(createKategoriDto: CreateKategoriDto): Promise<Kategori> {
+    return this.prisma.kategori.create({
+      data: createKategoriDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all kategori`;
+  // Ambil semua data kategori
+  async findAll(): Promise<Kategori[]> {
+    return this.prisma.kategori.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} kategori`;
+  // Ambil kategori berdasarkan id
+  async findOne(id: number): Promise<Kategori> {
+    const Kategori = await this.prisma.kategori.findUnique({
+      where: { id },
+    });
+
+    // Kalau data gak ada lempar error 404
+    if (!Kategori) {
+      throw new NotFoundException(`Kategori dengan id ${id} tidak ditemukan`);
+    }
+
+    return Kategori;
   }
 
-  update(id: number, updateKategoriDto: UpdateKategoriDto) {
-    return `This action updates a #${id} kategori`;
+  // Update kategori berdasarkan id
+  async update(
+    id: number,
+    updateKategoriDto: UpdateKategoriDto,
+  ): Promise<Kategori> {
+    // Cek data apakah ada atau tidak
+    await this.findOne(id);
+
+    return this.prisma.kategori.update({
+      where: { id },
+      data: updateKategoriDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} kategori`;
+  // Hapus kategori berdasarkan id
+  async remove(id: number): Promise<Kategori> {
+    // Cek data apakah ada atau tidak
+    await this.findOne(id);
+
+    return this.prisma.kategori.delete({
+      where: { id },
+    });
   }
 }
