@@ -1,34 +1,58 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { 
+  Controller, 
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { KategoriService } from './kategori.service';
 import { CreateKategoriDto } from './dto/create-kategori.dto';
 import { UpdateKategoriDto } from './dto/update-kategori.dto';
+import { Kategori } from './entities/kategori.entity';
 
+// Semua endpoint kategori
 @Controller('kategori')
 export class KategoriController {
   constructor(private readonly kategoriService: KategoriService) {}
 
+  // Tambah kategori baru
   @Post()
-  create(@Body() createKategoriDto: CreateKategoriDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body() createKategoriDto: CreateKategoriDto,
+  ): Promise<Kategori> {
     return this.kategoriService.create(createKategoriDto);
   }
 
+  // Ambil semua kategori
   @Get()
-  findAll() {
+  async findAll(): Promise<Kategori[]> {
     return this.kategoriService.findAll();
   }
 
+  // Ambil kategori berdasarkan id
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.kategoriService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Kategori> {
+    return this.kategoriService.findOne(id);
   }
 
+  // Update kategori berdasarkan id
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateKategoriDto: UpdateKategoriDto) {
-    return this.kategoriService.update(+id, updateKategoriDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateKategoriDto: UpdateKategoriDto,
+  ): Promise<Kategori> {
+    return this.kategoriService.update(id, updateKategoriDto);
   }
 
+  // Hapus kategori berdasarkan id
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.kategoriService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<Kategori> {
+    return this.kategoriService.remove(id);
   }
 }
