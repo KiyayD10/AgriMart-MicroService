@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { KategoriModule } from './kategori/kategori.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [KategoriModule],
+  imports: [KategoriModule, PrismaModule],
   controllers: [],
   providers: [],
 })
