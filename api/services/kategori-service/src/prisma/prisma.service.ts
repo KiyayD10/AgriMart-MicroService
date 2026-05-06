@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '../generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 // Service untuk jadi jembatan antara NestJS dan Prisma
 // Extends PrismaClient supaya bisa di-inject ke service lain
@@ -9,7 +10,11 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    super({});
+    // Prisma 7 wajib pakai adapter untuk koneksi ke PostgreSQL lokal
+    const adapter = new PrismaPg({
+      connectionString: process.env['DATABASE_URL'] as string,
+    });
+    super({ adapter });
   }
 
   // Konek ke DB pas module pertama kali jalan
