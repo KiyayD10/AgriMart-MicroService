@@ -10,7 +10,7 @@ async function bootstrap(): Promise<void> {
 
   // Validasi otomatis semua request body pakai DTO
   app.useGlobalPipes(
-    new ValidationPipe({ 
+    new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
