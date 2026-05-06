@@ -8,6 +8,10 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  constructor() {
+    super({});
+  }
+
   // Konek ke DB pas module pertama kali jalan
   async onModuleInit(): Promise<void> {
     await this.$connect();
