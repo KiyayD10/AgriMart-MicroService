@@ -6,8 +6,21 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// Buat model product
+model Product {
+  id         Int      @id @default(autoincrement())
+  nama       String
+  deskripsi  String?
+  harga      Int
+  stok       Int      @default(0)
+  kategoriId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
