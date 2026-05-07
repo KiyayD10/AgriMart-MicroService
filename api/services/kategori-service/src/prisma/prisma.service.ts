@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -10,7 +11,6 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    // Prisma 7 wajib pakai adapter untuk koneksi ke PostgreSQL lokal
     const adapter = new PrismaPg({
       connectionString: process.env['DATABASE_URL'] as string,
     });
