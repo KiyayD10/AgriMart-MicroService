@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from '../generated/prisma/client';
 
+// Semua route di /api/product
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  // Tambah data product
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
     return this.productService.create(createProductDto);
   }
 
+  // Ambil semua data product
   @Get()
-  findAll() {
+  async findAll(): Promise<Product[]> {
     return this.productService.findAll();
   }
 
+  // Ambil data product berdasarkan id
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product> {
+    return this.productService.findOne(id);
   }
 
+  // Update data product
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
+    return this.productService.update(id, updateProductDto);
   }
 
+  // Hapus data product
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     return this.productService.remove(+id);
   }
 }
