@@ -12,7 +12,7 @@ export class CreateProductDto {
   @IsString()
   @MinLength(3, { message: 'Nama minimal 3 karakter' })
   @MaxLength(100, { message: 'Nama maksimal 100 karakter' })
-  nama: string;
+  nama!: string;
 
   @IsOptional()
   @IsString()
@@ -21,12 +21,12 @@ export class CreateProductDto {
 
   @IsInt({ message: 'Harga harus berupa angka' })
   @Min(0, { message: 'Harga tidak boleh negatif' })
-  harga: number;
+  harga!: number;
 
   @IsInt({ message: 'Stok harus berupa angka' })
   @Min(0, { message: 'Stok tidak boleh negatif' })
-  stok: number;
+  stok!: number;
 
   @IsInt({ message: 'Kategori ID harus berupa angka' })
-  kategoriId: number;
+  kategoriId!: number;
 }
