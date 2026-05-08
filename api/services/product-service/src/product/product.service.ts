@@ -1,26 +1,63 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { Product } from '../generated/prisma/client';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  // Inject PrismaService untuk akses database
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Tambah product baru
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    return this.prisma.product.create({
+      data: createProductDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all product`;
+  // Ambil semua data product
+  async findAll(): Promise<Product[]> {
+    return this.prisma.product.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  // Ambil product berdasarkan id
+  async findOne(id: number): Promise<Product> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+    });
+
+    // Kalau data tidak ada kaih error 404
+    if (!product) {
+      throw new NotFoundException(`Product dengan id ${id} tidak ditemukan`);
+    }
+
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  // Update product berdasarkan id
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
+    // Cek data ada atau tidak ada
+    return this.findOne(id);
+
+    return this.prisma.product.update({
+      where: { id },
+      data: updateProductDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  // Hapus product berdasarkan id
+  async remove(id: number): Promise<Product> {
+    // Cek data ada atu tidak
+    await this.findOne(id);
+
+    return this.prisma.product.delete({
+      where: { id },
+    });
   }
 }
