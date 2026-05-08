@@ -43,7 +43,7 @@ export class ProductService {
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
     // Cek data ada atau tidak ada
-    return this.findOne(id);
+    await this.findOne(id);
 
     return this.prisma.product.update({
       where: { id },
