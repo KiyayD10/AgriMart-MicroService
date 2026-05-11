@@ -1,7 +1,7 @@
 # AgriMart Microservices
 Marketplace pertanian berbasis arsitektur microservices.
 
-## Stack
+## TechStack
 - NestJS
 - Prisma ORM (v7)
 - PostgreSQL
