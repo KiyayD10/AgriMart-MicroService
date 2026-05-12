@@ -6,6 +6,7 @@ Marketplace pertanian berbasis arsitektur microservices.
 - Prisma ORM (v7)
 - PostgreSQL
 - REST API
+- Axios
 
 ## Struktur Project
 ```
