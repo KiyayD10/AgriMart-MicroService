@@ -2,7 +2,7 @@
 export class Product {
   id!: number;
   nama!: string;
-  deskripsi!: string | null;
+  deskripsi?: string | null;
   harga!: number;
   stok!: number;
   kategoriId!: number;
