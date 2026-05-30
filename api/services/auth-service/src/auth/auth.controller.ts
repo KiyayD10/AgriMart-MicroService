@@ -1,34 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { User } from '../generated/prisma/client';
 
+// Semua endpoint auth → /api/auth
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  // POST /api/auth/register
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(
+    @Body() createAuthDto: CreateAuthDto,
+  ): Promise<Omit<User, 'password'>> {
+    return this.authService.register(createAuthDto);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  // POST /api/auth/login
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(
+    @Body() body: { email: string; password: string },
+  ): Promise<Omit<User, 'password'>> {
+    return this.authService.login(body.email, body.password);
   }
 }
