@@ -1,34 +1,64 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Order, OrderItem } from '../generated/prisma/client';
 
+// Tipe return untuk order beserta itemnya
+type OrderWithItems = Order & { items: OrderItem[] };
+
+// Semua route /api/order
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  // POST /api/order
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body() createOrderDto: CreateOrderDto,
+  ): Promise<OrderWithItems> {
     return this.orderService.create(createOrderDto);
   }
 
+  // GET /api/order
   @Get()
-  findAll() {
+  async findAll(): Promise<OrderWithItems[]> {
     return this.orderService.findAll();
   }
 
+  // GET /api/order/:id
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<OrderWithItems> {
+    return this.orderService.findOne(id);
   }
 
+  // PATCH /api/order/:id
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ): Promise<OrderWithItems> {
+    return this.orderService.update(id, updateOrderDto);
   }
 
+  // DELETE /api/order/:id
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<OrderWithItems> {
+    return this.orderService.remove(id);
   }
 }
