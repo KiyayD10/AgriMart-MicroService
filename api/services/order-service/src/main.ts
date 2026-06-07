@@ -1,8 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
-async function bootstrap() {
+// Bootstrap order-service
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+
+  // Prefix global semua route → /api/...
+  app.setGlobalPrefix('api');
+
+  // Validasi otomatis semua request body
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
+
+  // Port 3004 untuk order-service
+  await app.listen(3004);
 }
-bootstrap();
+void bootstrap();
