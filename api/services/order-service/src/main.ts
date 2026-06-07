@@ -6,7 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
-  // Prefix global semua route → /api/...
+  // Prefix global semua route
   app.setGlobalPrefix('api');
 
   // Validasi otomatis semua request body
