@@ -8,7 +8,7 @@ import { products as initialProducts } from "../../data/products";
   Fungsi:
   - Menampilkan daftar produk (dummy data)
   - Meniru tampilan admin panel sebelum connect ke backend API
-  - Sekarang sudah support tambah data (simulasi CREATE)
+  - Sekarang sudah support CREATE & DELETE (simulasi CRUD)
 */
 
 export default function ProductPage() {
@@ -16,8 +16,7 @@ export default function ProductPage() {
   const [list, setList] = useState(initialProducts);
 
   /*
-    Fungsi untuk tambah dummy product
-    - nanti di backend akan diganti POST API
+    CREATE product (dummy)
   */
   const handleAdd = () => {
     const newItem = {
@@ -31,14 +30,19 @@ export default function ProductPage() {
     setList([...list, newItem]);
   };
 
+  /*
+    DELETE product berdasarkan id
+  */
+  const handleDelete = (id: number) => {
+    setList(list.filter((item) => item.id !== id));
+  };
+
   return (
     <div>
       <h1>Product List</h1>
 
       {/*
         Tombol tambah product (dummy)
-        - simulasi CREATE data
-        - nanti diganti request ke backend
       */}
       <button onClick={handleAdd} style={styles.button}>
         + Add Dummy Product
@@ -46,8 +50,6 @@ export default function ProductPage() {
 
       {/*
         Table CMS Style
-        - borderCollapse agar garis tidak dobel
-        - styling biar lebih clean seperti admin dashboard
       */}
       <table style={styles.table}>
         <thead>
@@ -57,6 +59,7 @@ export default function ProductPage() {
             <th style={styles.th}>Deskripsi</th>
             <th style={styles.th}>Harga</th>
             <th style={styles.th}>Stok</th>
+            <th style={styles.th}>Action</th>
           </tr>
         </thead>
 
@@ -68,6 +71,18 @@ export default function ProductPage() {
               <td style={styles.td}>{item.deskripsi}</td>
               <td style={styles.td}>{item.harga}</td>
               <td style={styles.td}>{item.stok}</td>
+
+              {/*
+                Action button (DELETE)
+              */}
+              <td style={styles.td}>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  style={styles.deleteBtn}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -77,7 +92,7 @@ export default function ProductPage() {
 }
 
 /*
-  Styling sederhana untuk CMS table + button
+  Styling CMS
 */
 const styles = {
   button: {
@@ -85,6 +100,13 @@ const styles = {
     marginBottom: "20px",
     padding: "8px 12px",
     backgroundColor: "black",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+  },
+  deleteBtn: {
+    padding: "5px 10px",
+    backgroundColor: "red",
     color: "white",
     border: "none",
     cursor: "pointer",
