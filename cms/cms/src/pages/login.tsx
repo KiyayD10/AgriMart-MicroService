@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { adminAccount } from "../data/auth";
+import { adminAccount } from "../data/users";
 
 /*
   --------------------
