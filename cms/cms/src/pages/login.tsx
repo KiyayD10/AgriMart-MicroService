@@ -7,9 +7,8 @@ import { adminAccount } from "../data/users";
   Login Page (CMS)
   --------------------
   Fungsi:
-  - Login admin CMS
-  - Menggunakan dummy auth (belum backend)
-  - Akan diganti ke /auth/login dari backend nanti
+  - Login admin CMS (dummy auth)
+  - Redirect ke dashboard product jika sukses
 */
 
 export default function LoginPage() {
@@ -25,12 +24,10 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // cek dummy account
     if (
       email === adminAccount.email &&
       password === adminAccount.password
     ) {
-      // login sukses → masuk CMS product
       router.push("/product");
     } else {
       alert("Email atau password salah");
@@ -40,7 +37,7 @@ export default function LoginPage() {
   return (
     <div style={styles.container}>
       <form onSubmit={handleLogin} style={styles.form}>
-        <h1>CMS Login</h1>
+        <h1 style={{ marginBottom: "10px" }}>CMS Login</h1>
 
         {/* EMAIL */}
         <input
@@ -70,7 +67,7 @@ export default function LoginPage() {
 }
 
 /*
-  Styling login CMS sederhana
+  Styling CMS Login (FIXED)
 */
 const styles = {
   container: {
@@ -79,28 +76,30 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     fontFamily: "Arial",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#111", // 🔥 gelap biar fokus ke form
   },
   form: {
     display: "flex",
     flexDirection: "column" as const,
-    gap: "10px",
-    padding: "20px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    backgroundColor: "white",
-    width: "300px",
+    gap: "12px",
+    padding: "25px",
+    borderRadius: "10px",
+    backgroundColor: "#fff", // 🔥 card putih
+    width: "320px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
   },
   input: {
     padding: "10px",
     border: "1px solid #ccc",
-    borderRadius: "4px",
+    borderRadius: "6px",
+    outline: "none",
   },
   button: {
     padding: "10px",
-    backgroundColor: "black",
+    backgroundColor: "#000",
     color: "white",
     border: "none",
     cursor: "pointer",
+    borderRadius: "6px",
   },
 };
