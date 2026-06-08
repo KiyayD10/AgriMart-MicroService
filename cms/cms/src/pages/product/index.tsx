@@ -6,17 +6,17 @@ import { products as initialProducts } from "../../data/products";
   Product Page (CMS)
   --------------------
   Fungsi:
-  - Menampilkan daftar produk (dummy data)
-  - Meniru tampilan admin panel sebelum connect ke backend API
-  - Sekarang sudah support CREATE & DELETE (simulasi CRUD)
+  - CREATE product (dummy)
+  - READ product (table)
+  - DELETE product
+  - EDIT product (inline prompt)
 */
 
 export default function ProductPage() {
-  // state utama untuk list product (biar bisa berubah)
   const [list, setList] = useState(initialProducts);
 
   /*
-    CREATE product (dummy)
+    CREATE product
   */
   const handleAdd = () => {
     const newItem = {
@@ -31,26 +31,49 @@ export default function ProductPage() {
   };
 
   /*
-    DELETE product berdasarkan id
+    DELETE product
   */
   const handleDelete = (id: number) => {
     setList(list.filter((item) => item.id !== id));
+  };
+
+  /*
+    EDIT product (simple version pakai prompt)
+  */
+  const handleEdit = (id: number) => {
+    const target = list.find((item) => item.id === id);
+    if (!target) return;
+
+    const newNama = prompt("Edit Nama:", target.nama);
+    const newDeskripsi = prompt("Edit Deskripsi:", target.deskripsi);
+    const newHarga = prompt("Edit Harga:", String(target.harga));
+    const newStok = prompt("Edit Stok:", String(target.stok));
+
+    setList(
+      list.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              nama: newNama ?? item.nama,
+              deskripsi: newDeskripsi ?? item.deskripsi,
+              harga: Number(newHarga) || item.harga,
+              stok: Number(newStok) || item.stok,
+            }
+          : item
+      )
+    );
   };
 
   return (
     <div>
       <h1>Product List</h1>
 
-      {/*
-        Tombol tambah product (dummy)
-      */}
+      {/* CREATE */}
       <button onClick={handleAdd} style={styles.button}>
         + Add Dummy Product
       </button>
 
-      {/*
-        Table CMS Style
-      */}
+      {/* TABLE */}
       <table style={styles.table}>
         <thead>
           <tr>
@@ -72,10 +95,16 @@ export default function ProductPage() {
               <td style={styles.td}>{item.harga}</td>
               <td style={styles.td}>{item.stok}</td>
 
-              {/*
-                Action button (DELETE)
-              */}
               <td style={styles.td}>
+                {/* EDIT */}
+                <button
+                  onClick={() => handleEdit(item.id)}
+                  style={styles.editBtn}
+                >
+                  Edit
+                </button>
+
+                {/* DELETE */}
                 <button
                   onClick={() => handleDelete(item.id)}
                   style={styles.deleteBtn}
@@ -100,6 +129,14 @@ const styles = {
     marginBottom: "20px",
     padding: "8px 12px",
     backgroundColor: "black",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+  },
+  editBtn: {
+    marginRight: "5px",
+    padding: "5px 10px",
+    backgroundColor: "blue",
     color: "white",
     border: "none",
     cursor: "pointer",
