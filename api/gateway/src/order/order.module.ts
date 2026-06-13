@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { OrderController } from './order.controller';
+import { HttpModule } from '@nestjs/axios';
 import { OrderService } from './order.service';
+import { OrderController } from './order.controller';
 
 @Module({
+  imports: [HttpModule],
   controllers: [OrderController],
-  providers: [OrderService]
+  providers: [OrderService],
 })
 export class OrderModule {}
