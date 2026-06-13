@@ -6,8 +6,30 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum StockLogType {
+  IN
+  OUT
+}
+
+model Inventory {
+  id         Int      @id @default(autoincrement())
+  productId  Int      @unique
+  stock      Int      @default(0)
+  updatedAt  DateTime @updatedAt
+}
+
+model StockLog {
+  id        Int          @id @default(autoincrement())
+  productId Int
+  quantity  Int
+  type      StockLogType
+  note      String?
+  createdAt DateTime     @default(now())
 }
